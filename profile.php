@@ -11,6 +11,7 @@ $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $pdo->prepare($query);
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
+$sucess;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $email = $_POST['email'];
@@ -21,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
         $query = "UPDATE users SET email = ?, password = ? WHERE id = ?";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$email, $password, $_SESSION['user_id']]);
+        $sucess = "your password has been updates!";
     } else {
         $query = "UPDATE users SET email = ? WHERE id = ?";
         $stmt = $pdo->prepare($query);
@@ -42,6 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 </head>
 <body>
 
+<header>
+    <nav>
+        <ul>
+            <li><a href="home.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+                <li><a href="register.php">Register</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+</header>
+
 
 
 <h2>Welcome, <?php echo htmlspecialchars($user['username']); ?></h2>
@@ -55,6 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 
     <button type="submit" name="update">Update Profile</button>
 </form>
+
+<?php
+if (isset($sucess)){
+    echo $sucess;
+}
+
+?>
 
 </body>
 </html>

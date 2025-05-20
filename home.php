@@ -19,7 +19,7 @@ $products = $pdo->query($query_products)->fetchAll();
 
 <header>
     <div class="logo-container">
-        <h1 class="logo">Our Online Store</h1>
+        <h1 class="logo">Shoes R Us</h1>
     </div>
     <nav>
         <ul>
@@ -42,23 +42,20 @@ $products = $pdo->query($query_products)->fetchAll();
 
     <section class="products">
         <h2>Products</h2>
-        <ul>
-            <?php foreach ($products as $product): ?>
-                <li class="items">
-                    <h3><?php echo htmlspecialchars($product['type']); ?></h3>
-                    <p><?php echo htmlspecialchars($product['description']); ?></p>
+        <?php foreach ($products as $product): ?>
+            <div class="items">
+                <h3><?php echo htmlspecialchars($product['type']); ?></h3>
+                <p><?php echo htmlspecialchars($product['description']); ?></p>
 
-                    <!-- Display the image from BLOB data -->
-                    <?php
-                    $image = $product['image']; // BLOB data
-                    $base64Image = base64_encode($image); // Convert to base64 string
-                    ?>
-                    <img src="data:image/jpeg;base64,<?php echo $base64Image; ?>" alt="<?php echo htmlspecialchars($product['type']); ?>" width="300" onError="this.onerror=null;this.src='images/default.jpg';">
+                <?php
+                $image = $product['image'];
+                $base64Image = base64_encode($image);
+                ?>
+                <img src="data:image/jpeg;base64,<?php echo $base64Image; ?>" alt="<?php echo htmlspecialchars($product['type']); ?>" onError="this.onerror=null;this.src='images/default.jpg';">
 
-                    <a href="index.php?id=<?php echo $product['id']; ?>">View Details</a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+                <a href="index.php?id=<?php echo $product['id']; ?>">View Details</a>
+            </div>
+        <?php endforeach; ?>
     </section>
 </main>
 

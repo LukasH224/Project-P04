@@ -2,9 +2,26 @@
 session_start();
 require_once 'db_connection.php';
 
-// Fetch products from the database
-$query_products = "SELECT * FROM shoes";
-$products = $pdo->query($query_products)->fetchAll();
+// Check if the shoe ID is passed in the URL
+if (isset($_GET['id'])) {
+    $shoe_id = $_GET['id'];
+
+    // Fetch product details from the database
+    $query = "SELECT * FROM shoes WHERE id = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$shoe_id]);
+    $product = $stmt->fetch();
+
+    // If product not found, redirect to home page
+    if (!$product) {
+        header('Location: home.php');
+        exit();
+    }
+} else {
+    // If no ID is passed, redirect to home page
+    header('Location: home.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +29,7 @@ $products = $pdo->query($query_products)->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title><?php echo htmlspecialchars($product['type']); ?> - Product Details</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -34,19 +51,20 @@ $products = $pdo->query($query_products)->fetchAll();
 </header>
 
 <main>
-    <h1>Welcome to Our Online Store</h1>
+    <h1><?php echo htmlspecialchars($product['type']); ?> - Product Details</h1>
 
-    <section class="products">
-        <h2>Products</h2>
-        <ul>
-            <?php foreach ($products as $product): ?>
-                <li>
-                    <h3><?php echo htmlspecialchars($product['type']); ?></h3>
-                    <p><?php echo htmlspecialchars($product['description']); ?></p>
-                    <a href="product_details.php?id=<?php echo $product['id']; ?>">View Details</a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+    <section class="product-details">
+        <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['type']); ?>" width="400">
+        
+        <h2>Description</h2>
+        <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
+        
+        <h2>Price</h2>
+        <p><?php echo htmlspecialchars($product['price']); ?> USD</p>
+        
+        <!-- Add any additional details you want here -->
+
+        <a href="home.php">Back to Products</a>
     </section>
 </main>
 
