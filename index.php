@@ -2,12 +2,8 @@
 session_start();
 require_once 'db_connection.php';
 
-// Fetch product categories and reviews from the database
-$query = "SELECT * FROM categories";
-$categories = $pdo->query($query)->fetchAll();
-
 // Fetch products from the database
-$query_products = "SELECT * FROM products";
+$query_products = "SELECT * FROM shoes";
 $products = $pdo->query($query_products)->fetchAll();
 ?>
 
@@ -24,7 +20,7 @@ $products = $pdo->query($query_products)->fetchAll();
 <header>
     <nav>
         <ul>
-            <li><a href="index.php">Home</a></li>
+            <li><a href="home.php">Home</a></li>
             <li><a href="about.php">About</a></li>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="profile.php">Profile</a></li>
@@ -40,24 +36,23 @@ $products = $pdo->query($query_products)->fetchAll();
 <main>
     <h1>Welcome to Our Online Store</h1>
 
-    <section class="categories">
-        <h2>Categories</h2>
-        <ul>
-            <?php foreach ($categories as $category): ?>
-                <li><?php echo htmlspecialchars($category['name']); ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </section>
-
     <section class="products">
         <h2>Products</h2>
         <ul>
             <?php foreach ($products as $product): ?>
                 <li>
-                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <h3><?php echo htmlspecialchars($product['type']); ?></h3>
                     <p><?php echo htmlspecialchars($product['description']); ?></p>
                     <a href="product_details.php?id=<?php echo $product['id']; ?>">View Details</a>
                 </li>
             <?php endforeach; ?>
         </ul>
-    </
+    </section>
+</main>
+
+<footer>
+    <p>&copy; <?php echo date("Y"); ?> Online Store. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

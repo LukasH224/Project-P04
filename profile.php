@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db_connection.php';
+include 'db_connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+
 
 <h2>Welcome, <?php echo htmlspecialchars($user['username']); ?></h2>
 

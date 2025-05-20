@@ -1,0 +1,208 @@
+/* Global Styles */
+body {
+    margin: 0;
+    background-color: #f0f0f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 20px;
+}
+
+.logo-container {
+    flex-grow: 1;
+}
+
+.logo {
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav li {
+    position: relative;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #7b68ee;
+    color: white;
+}
+
+/* Main Section */
+main {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 40px;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+/* Product Section */
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.items {
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.items:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.items img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Links in Product */
+.items a {
+    text-decoration: none;
+    color: #7b68ee;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.items a:hover {
+    color: #6a5acd;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .products {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .items {
+        width: 80%;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav a {
+        font-size: 16px;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .items {
+        width: 100%;
+    }
+}
+
+/* CSS for Login and Register Pages */
+.form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #7b68ee;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+button:hover {
+    background-color: #6a5acd;
+}
+
+input {
+    border: none;
+    border-radius: 12px;
+    outline: none;
+}
+
+/* Footer for forms */
+footer.form-footer {
+    text-align: center;
+    background-color: #f0f0f5;
+    padding: 20px;
+    color: #333;
+    font-size: 14px;
+}

@@ -1,12 +1,9 @@
 <?php
 session_start();
-require_once 'db_connection.php';
+include 'db_connection.php';
 
-// Fetch product categories and products from the database
-$query = "SELECT * FROM categories";
-$categories = $pdo->query($query)->fetchAll();
-
-$query_products = "SELECT * FROM products";
+// Fetch products from the database
+$query_products = "SELECT * FROM shoes";
 $products = $pdo->query($query_products)->fetchAll();
 ?>
 
@@ -21,11 +18,14 @@ $products = $pdo->query($query_products)->fetchAll();
 <body>
 
 <header>
+    <div class="logo-container">
+        <h1 class="logo">Our Online Store</h1>
+    </div>
     <nav>
         <ul>
             <li><a href="home.php">Home</a></li>
             <li><a href="about.php">About</a></li>
-            <li><a href="contact.php">contact</a></li>
+            <li><a href="contact.php">Contact</a></li>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="profile.php">Profile</a></li>
                 <li><a href="logout.php">Logout</a></li>
@@ -40,28 +40,26 @@ $products = $pdo->query($query_products)->fetchAll();
 <main>
     <h1>Welcome to Our Online Store</h1>
 
-    <section class="categories">
-        <h2>Categories</h2>
-        <ul>
-            <?php foreach ($categories as $category): ?>
-                <li><?php echo htmlspecialchars($category['name']); ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </section>
-
     <section class="products">
         <h2>Products</h2>
         <ul>
             <?php foreach ($products as $product): ?>
-                <li>
-                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                <li class="items">
+                    <h3><?php echo htmlspecialchars($product['type']); ?></h3>
                     <p><?php echo htmlspecialchars($product['description']); ?></p>
-                    <a href="product_details.php?id=<?php echo $product['id']; ?>">View Details</a>
+
+                    <!-- Display the image from BLOB data -->
+                    <?php
+                    $image = $product['image']; // BLOB data
+                    $base64Image = base64_encode($image); // Convert to base64 string
+                    ?>
+                    <img src="data:image/jpeg;base64,<?php echo $base64Image; ?>" alt="<?php echo htmlspecialchars($product['type']); ?>" width="300" onError="this.onerror=null;this.src='images/default.jpg';">
+
+                    <a href="index.php?id=<?php echo $product['id']; ?>">View Details</a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </section>
-
 </main>
 
 <footer>

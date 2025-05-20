@@ -1,17 +1,17 @@
 <?php
-$host = 'localhost'; // Your database host (usually localhost)
-$dbname = 'your_database_name'; // Your database name
-$username = 'your_username'; // Your database username
-$password = 'your_password'; // Your database password
+// Database connection settings
+$host = 'localhost';        // Your database host (usually 'localhost')
+$dbname = 'shoes';   // Your database name
+$username = 'root'; // Your database username
+$password = ''; // Your database password
 
 try {
-    // Create a new PDO instance
+    // Creating a new PDO instance and setting error mode to exception for error handling
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    // Set the PDO error mode to exception
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable error handling
 } catch (PDOException $e) {
-    // If the connection fails, show an error message
-    echo "Connection failed: " . $e->getMessage();
-    exit;
+    // Displaying a custom error message if connection fails
+    echo 'Connection failed: ' . $e->getMessage();
+    exit();
 }
 ?>
