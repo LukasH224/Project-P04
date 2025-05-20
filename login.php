@@ -1,86 +1,53 @@
 <?php
 session_start();
+require_once 'db_connection.php';
 
-
-$conn = new mysqli("localhost", "root", "", "shoes");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if (isset($_GET['logout'])) {
-    session_destroy();
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-if (isset($_POST['register'])) {
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $conn->query("INSERT INTO users (username, password) VALUES ('$username', '$password')");
-    echo "<p>Registered! You can now log in.</p>";
-}
-
-if (isset($_POST['login'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $result = $conn->query("SELECT * FROM users WHERE username = '$username'");
-    if ($row = $result->fetch_assoc()) {
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['user'] = $row;
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        } else {
-            echo "<p>Wrong password!</p>";
-        }
+
+    // Check if the username exists in the database
+    $query = "SELECT * FROM users WHERE username = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
+    // Verify password if user exists
+    if ($user && password_verify($password, $user['password'])) {
+        // Store session variables for logged-in user
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        header('Location: profile.php'); // Redirect to profile page
+        exit();
     } else {
-        echo "<p>User not found!</p>";
+        $error_message = "Invalid username or password!";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <title>Simple Login/Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-    <div class="logo">Our website logo</div>
-</header>
+<h2>Login</h2>
 
-<nav>
-    <a href="">Home</a>
-    <a href="#">Contact</a>
-    <a href="http://localhost/project/home.php">Category</a>
-    <a href="login.php">Login</a>
-     <a href="about.php">About Us</a>
-</nav>
-
-<?php if (isset($_SESSION['user'])): ?>
-    <div class="form-container">
-        <h2>Welcome, <?= $_SESSION['user']['username'] ?>!</h2>
-        <p>User ID: <?= $_SESSION['user']['id'] ?></p>
-        <a href="?logout=true">Logout</a>
-    </div>
-<?php else: ?>
-    <div class="form-container">
-        <h2>Register</h2>
-        <form method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" name="register">Register</button>
-        </form>
-
-        <h2>Login</h2>
-        <form method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" name="login">Login</button>
-        </form>
-    </div>
+<?php if (isset($error_message)): ?>
+    <p style="color:red;"><?php echo $error_message; ?></p>
 <?php endif; ?>
+
+<form action="login.php" method="POST">
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+</form>
+
+<p><a href="register.php">Don't have an account? Register here</a></p>
 
 </body>
 </html>

@@ -1,61 +1,63 @@
+<?php
+session_start();
+require_once 'db_connection.php';
+
+// Fetch product categories and reviews from the database
+$query = "SELECT * FROM categories";
+$categories = $pdo->query($query)->fetchAll();
+
+// Fetch products from the database
+$query_products = "SELECT * FROM products";
+$products = $pdo->query($query_products)->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Shoe Details</title>
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">Our website logo</div>
-    </header>
 
+<header>
     <nav>
-       <a href="">Home</a>
-    <a href="#">Contact</a>
-    <a href="http://localhost/project/home.php">Category</a>
-    <a href="login.php">Login</a>
-       <a href="about.php">About Us</a>
+        <ul>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+                <li><a href="register.php">Register</a></li>
+            <?php endif; ?>
+        </ul>
     </nav>
+</header>
 
-    <main>
-        <?php
-        echo "<div class='products'>";
+<main>
+    <h1>Welcome to Our Online Store</h1>
 
-        try {
-            $db = new PDO("mysql:host=localhost;dbname=shoes", "root", "");
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    <section class="categories">
+        <h2>Categories</h2>
+        <ul>
+            <?php foreach ($categories as $category): ?>
+                <li><?php echo htmlspecialchars($category['name']); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
 
-            $id = isset($_GET["id"]) ? (int)$_GET["id"] : 0;
-
-            if ($id > 0) {
-                $query = $db->prepare("SELECT * FROM shoes WHERE id = :id");
-                $query->bindParam(":id", $id, PDO::PARAM_INT);
-                $query->execute();
-
-                if ($shoes = $query->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<div class='opisanie'><h3>" . htmlspecialchars($shoes["opisanie"]) . "</h3></div>";
-                    echo "<div class='items'>";
-                    echo "<h2>" . htmlspecialchars($shoes["type"]) . "</h2>";
-                    echo "<img src='data:image/jpeg;base64," . base64_encode($shoes["image"]) . "' alt='Shoe Image'>";
-                    echo "<p>" . htmlspecialchars($shoes["description"]) . "</p>";
-                    echo "<p>Price: €" . number_format($shoes["price"], 2) . "</p>";
-                    echo "</div>";
-                } else {
-                    echo "<p>No shoe found with the given ID.</p>";
-                }
-            } else {
-                echo "<p>Invalid shoe ID provided.</p>";
-            }
-        } catch (PDOException $e) {
-            echo "<p>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
-        }
-
-        echo "</div>";
-        ?>
-        <div class="sale">SALE</div>
-        <div class="sale2">SALE</div>
-    </main>
-</body>
-</html>
+    <section class="products">
+        <h2>Products</h2>
+        <ul>
+            <?php foreach ($products as $product): ?>
+                <li>
+                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <p><?php echo htmlspecialchars($product['description']); ?></p>
+                    <a href="product_details.php?id=<?php echo $product['id']; ?>">View Details</a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </

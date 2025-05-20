@@ -1,50 +1,72 @@
+<?php
+session_start();
+require_once 'db_connection.php';
+
+// Fetch product categories and products from the database
+$query = "SELECT * FROM categories";
+$categories = $pdo->query($query)->fetchAll();
+
+$query_products = "SELECT * FROM products";
+$products = $pdo->query($query_products)->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="styles.css">
-    <title>Shoe Catalog</title>
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="logo">Our Website Logo</div>
-    </header>
-
+<header>
     <nav>
-         <a href="">Home</a>
-    <a href="#">Contact</a>
-    <a href="http://localhost/project/home.php">Category</a>
-    <a href="login.php">Login</a>
-       <a href="about.php">About Us</a>
+        <ul>
+            <li><a href="home.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">contact</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Login</a></li>
+                <li><a href="register.php">Register</a></li>
+            <?php endif; ?>
+        </ul>
     </nav>
+</header>
 
-    <main>
-        <div class="products">
-            <?php
-            try {
-                $db = new PDO("mysql:host=localhost;dbname=shoes", "root", "");
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+<main>
+    <h1>Welcome to Our Online Store</h1>
 
-                $query = $db->query("SELECT * FROM shoes");
+    <section class="categories">
+        <h2>Categories</h2>
+        <ul>
+            <?php foreach ($categories as $category): ?>
+                <li><?php echo htmlspecialchars($category['name']); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
 
-                while ($shoes = $query->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<div class='items'>";
-                    echo "<h2>" . htmlspecialchars($shoes["type"]) . "</h2>";
-                    echo "<a href='index.php?id=" . $shoes["id"] . "'>";
-                    echo "<img src='data:image/jpeg;base64," . base64_encode($shoes["image"]) . "' alt='Shoe Image'>";
-                    echo "</a>";
-                    echo "<p>" . htmlspecialchars($shoes["description"]) . "</p>";
-                    echo "<p><strong>Price:</strong> €" . number_format($shoes["price"], 2) . "</p>";
-                    echo "</div>";
-                }
-            } catch (PDOException $e) {
-                echo "<p>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
-            }
-            ?>
-        </div>
-    </main>
+    <section class="products">
+        <h2>Products</h2>
+        <ul>
+            <?php foreach ($products as $product): ?>
+                <li>
+                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <p><?php echo htmlspecialchars($product['description']); ?></p>
+                    <a href="product_details.php?id=<?php echo $product['id']; ?>">View Details</a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 Our Online Store. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
